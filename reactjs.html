@@ -79,15 +79,9 @@
                 </StorageProvider.Provider>
             )
         }
-        
-        //storage
-        const useStorage = () => {
-            const [state, dispatch] = React.useContext(StorageProvider)
-            return [state,dispatch]
-        }
-
+       
         const ToDo = () =>{
-            const [state, dispatch] = useStorage()
+            const [state, dispatch] = React.useContext(StorageProvider)
             return (
                 <div>
                     <input 
