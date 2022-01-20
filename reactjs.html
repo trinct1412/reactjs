@@ -14,7 +14,6 @@
         //action
         const SET_TODO_INPUT = 'set_todo_input'
         const ADD_TODO_INPUT = 'add_todo_input'
-        const REMOVE_TODO_INPUT = 'remove_todo_input'
         const setTodoInput = payload =>({
             type : SET_TODO_INPUT,
             payload
@@ -23,11 +22,7 @@
             type : ADD_TODO_INPUT,
             payload
         })
-        const removeTodoInput = payload =>({
-            type : REMOVE_TODO_INPUT,
-            payload
-        })
-
+        
         //initsate 
         const initState = {
             todoInput:'',
@@ -48,13 +43,6 @@
                         ...state,
                         todos: [...state.todos,action.payload]
                     }
-                    break
-                case REMOVE_TODO_INPUT:{
-                    const index = state.todos.findIndex((todo) => todo.id === action.payload.id);
-                    if (index !== -1) {
-                        state.todos.splice(index, 1);
-                    }
-                }
                     break
                 default:
                     throw expect('not action')
