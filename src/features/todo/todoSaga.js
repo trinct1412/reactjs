@@ -33,11 +33,11 @@ function* watchTodoFetchList(){
     yield fork(fetchToDo, action.payload)
 }
 
-function* watchTodoFlow(){
+function* watchAddTodo(){
     yield takeLatest(TodoAction.addToDo.type, addToDo)
 }
 
-function* watchDeleteTodoFlow(){
+function* watchDeleteTodo(){
     while(true){
         const action = yield take(TodoAction.deleteToDo.type);
         yield fork(deleteToDo, action.payload)
@@ -45,14 +45,19 @@ function* watchDeleteTodoFlow(){
 }
 
 function* addingToDoSaga(){
-    yield fork(watchTodoFlow)
+    yield fork(watchAddTodo)
 }
 
 function* fetchToDoSaga(){
     yield fork(watchTodoFetchList)
 }
+
+function* deleteToDoSaga(){
+    yield fork(watchDeleteTodo)
+}
+
 export default [
     addingToDoSaga(),
     fetchToDoSaga(),
-    watchDeleteTodoFlow(),
+    deleteToDoSaga(),
 ]
