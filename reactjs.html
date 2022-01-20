@@ -80,7 +80,7 @@
             )
         }
        
-        const ToDo = () =>{
+        const App = () =>{
             const [state, dispatch] = React.useContext(StorageProvider)
             return (
                 <div>
@@ -94,14 +94,7 @@
                 </div>
             )
         }
-        const App = () =>{
-            return(
-                <Provider>
-                    <ToDo/>
-                </Provider>
-            )
-        }
-        ReactDOM.render(<App/>,document.getElementById('root'))
+        ReactDOM.render(<Provider><App/></Provider>,document.getElementById('root'))
     </script> 
 </body>
 </html>
