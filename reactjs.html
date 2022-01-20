@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Center the map on a clicked feature</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<style>
+    .dark{
+        color:#fff;
+        background-color: #333;
+    }
+</style>
+</head>
+<body>
+    <div id="root"></div> 
+    <script type="text/babel">
+        //action
+        const SET_TODO_INPUT = 'set_todo_input'
+        const ADD_TODO_INPUT = 'add_todo_input'
+        const REMOVE_TODO_INPUT = 'remove_todo_input'
+        const setTodoInput = payload =>({
+            type : SET_TODO_INPUT,
+            payload
+        })
+        const addTodoInput = payload =>({
+            type : ADD_TODO_INPUT,
+            payload
+        })
+        const removeTodoInput = payload =>({
+            type : REMOVE_TODO_INPUT,
+            payload
+        })
+
+        //initsate 
+        const initState = {
+            todoInput:'',
+            todos:[]
+        }
+
+        //dispatch - reducer
+        const dispatchs = (state,action)=>{
+            switch(action.type){
+                case SET_TODO_INPUT:
+                    return {
+                        ...state,
+                        todos: action.payload
+                    }
+                    break
+                case ADD_TODO_INPUT:
+                    return {
+                        ...state,
+                        todos: [...state.todos,action.payload]
+                    }
+                    break
+                case REMOVE_TODO_INPUT:{
+                    const index = state.todos.findIndex((todo) => todo.id === action.payload.id);
+                    if (index !== -1) {
+                        state.todos.splice(index, 1);
+                    }
+                }
+                    break
+                default:
+                    throw expect('not action')
+            }
+        }
+
+        // storageProvider
+        const StorageProvider = React.createContext()
+
+        // provider 
+        const Provider = ({childrenProps}) => {
+            const [state, dispatch] = React.useReducer(dispatchs, initState)
+            return (
+                <StorageProvider.Provider value={[state, dispatch]}>
+                    {childrenProps}
+                </StorageProvider.Provider>
+            )
+        }
+        
+        //storage
+        const useStorage = () => {
+            const [state, dispatch] = React.useContext(StorageProvider)
+            return [state,dispatch]
+        }
+
+        const ToDo = () =>{
+            const [state, dispatch] = useStorage()
+            return (
+                <div>
+                    <input 
+                    value={state.todoInput}
+                    placeholder = 'type'
+                    onChange={e => dispatchs(setTodoInput(e.target.value))}
+                    />
+                    <button onClick={e => dispatchs(addTodoInput(state.todoInput))}>add</button>
+                    <ul>{state.todos.map((item,index)=><li key={index}>{item}</li>)}</ul>
+                </div>
+            )
+        }
+        const App = () =>{
+            return(
+                <Provider>
+                    <ToDo/>
+                </Provider>
+            )
+        }
+        ReactDOM.render(<App/>,document.getElementById('root'))
+    </script> 
+</body>
+</html>
